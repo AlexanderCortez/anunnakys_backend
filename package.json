@@ -18,7 +18,12 @@
   },
   "homepage": "https://github.com/AlexanderCortez/anunnakys_backend#readme",
   "dependencies": {
-    "express": "^4.16.4"
+    "bookshelf": "^0.14.2",
+    "cross-env": "^5.2.0",
+    "dot-env": "0.0.1",
+    "express": "^4.16.4",
+    "knex": "^0.16.3",
+    "mysql": "^2.16.0"
   },
   "devDependencies": {
     "eslint": "^5.11.1",
