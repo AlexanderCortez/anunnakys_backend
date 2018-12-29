@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "cross-env NODE_ENV=development nodemon ./app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,12 +19,15 @@
   },
   "homepage": "https://github.com/AlexanderCortez/anunnakys_backend#readme",
   "dependencies": {
+    "bcrypt": "^3.0.3",
+    "body-parser": "^1.18.3",
     "bookshelf": "^0.14.2",
     "cross-env": "^5.2.0",
-    "dot-env": "0.0.1",
+    "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "knex": "^0.16.3",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "nodemon": "^1.18.9"
   },
   "devDependencies": {
     "eslint": "^5.11.1",
