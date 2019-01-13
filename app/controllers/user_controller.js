@@ -6,7 +6,7 @@ const showUsers = (req, res) => {
   User
     .fetchAll()
     .then((users) => {
-      res.send({
+      res.status(200).send({
         users,
       });
     })
@@ -63,16 +63,25 @@ const removeUser = (req, res) => {
 const updateUser = (req, res) => {
   const { id } = req.params;
   const {
-    name, username,
+    name, username, isAdmin, password,
   } = req.body;
+  let setPassword = {};
+  if (password) {
+    setPassword = {
+      user_password: bcrypt.hashSync(password, 10),
+    };
+  }
+  const data = {
+    user_name: name,
+    user_username: username,
+    user_isAdmin: isAdmin,
+    ...setPassword,
+  };
   User
     .where('user_id', id)
     .fetch()
     .then(userFound => userFound
-      .save({
-        user_name: name,
-        user_username: username,
-      }))
+      .save(data))
     .then((user) => {
       res.send({
         message: 'User updated successfully',
