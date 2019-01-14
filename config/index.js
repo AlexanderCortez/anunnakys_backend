@@ -1,12 +1,16 @@
+const { DB, DB_PRODUCTION } = process.env;
+
 const config = {
+  production: {
+    database: DB_PRODUCTION,
+  },
   development: {
-    connection: {
-      host: '127.0.0.1',
-      user: 'root',
-      password: 'gui',
-      database: 'anunnakys_dev',
-    },
+    database: DB,
   },
 };
 
-module.exports = config;
+function get(env) {
+  return config[env];
+}
+
+module.exports = get;

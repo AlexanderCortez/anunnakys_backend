@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
-const User = require('../models/user_model');
+const User = require('../models/mongo_mappers/user');
 
 const showUsers = (req, res) => {
   User
-    .fetchAll()
+    .find()
     .then((users) => {
       res.status(200).send({
         users,
@@ -22,14 +22,14 @@ const createUser = (req, res) => {
     name, password, username, isAdmin,
   } = req.body;
   const userPassword = bcrypt.hashSync(password, 10);
-  User
-    .forge({
-      user_name: name,
-      user_username: username,
-      user_password: userPassword,
-      user_isAdmin: isAdmin,
-    })
-    .save(null, { method: 'insert' })
+  const newUser = new User({
+    name,
+    username,
+    password: userPassword,
+    isAdmin,
+  });
+  newUser
+    .save()
     .then((user) => {
       res.send({
         message: 'User created sucessfully',
@@ -46,8 +46,14 @@ const createUser = (req, res) => {
 const removeUser = (req, res) => {
   const { id } = req.params;
   User
-    .where('user_id', id)
-    .destroy()
+    .findById(id)
+    .then((user) => {
+      if (user) {
+        return user
+          .remove();
+      }
+      return Promise.reject(new Error('User not found'));
+    })
     .then(() => {
       res.send({
         message: 'User removed successfully',
@@ -68,20 +74,25 @@ const updateUser = (req, res) => {
   let setPassword = {};
   if (password) {
     setPassword = {
-      user_password: bcrypt.hashSync(password, 10),
+      password: bcrypt.hashSync(password, 10),
     };
   }
   const data = {
-    user_name: name,
-    user_username: username,
-    user_isAdmin: isAdmin,
+    name,
+    username,
+    isAdmin,
     ...setPassword,
   };
   User
-    .where('user_id', id)
-    .fetch()
-    .then(userFound => userFound
-      .save(data))
+    .findById(id)
+    .then((user) => {
+      if (user) {
+        user.set(data);
+        return user
+          .save();
+      }
+      return Promise.reject(new Error('User not found'));
+    })
     .then((user) => {
       res.send({
         message: 'User updated successfully',
