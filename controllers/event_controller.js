@@ -1,10 +1,10 @@
 const router = require('express').Router();
 
-const Event = require('../models/event_model');
+const Event = require('../models/mongo_mappers/event');
 
 const showEvents = (req, res) => {
   Event
-    .fetchAll()
+    .find()
     .then((events) => {
       res.send({
         events,
@@ -19,20 +19,22 @@ const showEvents = (req, res) => {
 
 const createEvent = (req, res) => {
   const {
-    name, place, npc, start, finish,
+    name, type, place, npc, time, day, sound,
   } = req.body;
-  Event
-    .forge({
-      event_name: name,
-      event_place: place,
-      event_npc: npc,
-      event_start: start,
-      event_finish: finish,
-    })
-    .save(null, { method: 'insert' })
+  const newEvent = new Event({
+    name,
+    type,
+    place,
+    npc,
+    time,
+    day,
+    sound,
+  });
+  newEvent
+    .save()
     .then((event) => {
       res.send({
-        message: 'Event creared successfully',
+        message: 'Event created successfully',
         event,
       });
     })
@@ -43,7 +45,69 @@ const createEvent = (req, res) => {
     });
 };
 
+const updaEvent = (req, res) => {
+  const { id } = req.params;
+  const {
+    name, type, place, npc, time, day, sound,
+  } = req.body;
+  const data = {
+    name,
+    type,
+    place,
+    npc,
+    time,
+    day,
+    sound,
+  };
+  Event
+    .findById(id)
+    .then((event) => {
+      if (event) {
+        event.set(data);
+        return event
+          .save();
+      }
+      return Promise.reject(new Error('User not found'));
+    })
+    .then((event) => {
+      res.send({
+        message: 'Event updated successfully',
+        event,
+      });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        error: err.messsage || 'Error updating event',
+      });
+    });
+};
+
+const removeEvent = (req, res) => {
+  const { id } = req.params;
+  Event
+    .findById(id)
+    .then((event) => {
+      if (event) {
+        return event
+          .remove();
+      }
+      return Promise.reject(new Error('Event not found'));
+    })
+    .then(() => {
+      res.send({
+        message: 'Event removed successfully',
+      });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        error: err.messsage || 'Error removing event',
+      });
+    });
+}
+
 router.get('/', showEvents);
 router.post('/', createEvent);
+router.put('/:id', updaEvent);
+router.delete('/:id', removeEvent);
 
 module.exports = router;
