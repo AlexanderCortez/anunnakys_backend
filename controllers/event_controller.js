@@ -103,7 +103,7 @@ const removeEvent = (req, res) => {
         error: err.messsage || 'Error removing event',
       });
     });
-}
+};
 
 router.get('/', showEvents);
 router.post('/', createEvent);
