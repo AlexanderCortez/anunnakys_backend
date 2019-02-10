@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   name: String,
   username: { type: String, unique: true },
   password: String,
-  isAdmin: Boolean,
+  role: String,
 }, {
   timestamps: true,
 });
