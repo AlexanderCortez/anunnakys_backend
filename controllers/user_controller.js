@@ -19,14 +19,14 @@ const showUsers = (req, res) => {
 
 const createUser = (req, res) => {
   const {
-    name, password, username, isAdmin,
+    name, password, username, role,
   } = req.body;
   const userPassword = bcrypt.hashSync(password, 10);
   const newUser = new User({
     name,
     username,
     password: userPassword,
-    isAdmin,
+    role,
   });
   newUser
     .save()
@@ -69,7 +69,7 @@ const removeUser = (req, res) => {
 const updateUser = (req, res) => {
   const { id } = req.params;
   const {
-    name, username, isAdmin, password,
+    name, username, role, password,
   } = req.body;
   let setPassword = {};
   if (password) {
@@ -80,7 +80,7 @@ const updateUser = (req, res) => {
   const data = {
     name,
     username,
-    isAdmin,
+    role,
     ...setPassword,
   };
   User
