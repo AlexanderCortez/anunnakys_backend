@@ -1,0 +1,26 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10.11.0
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run:
+          command: yarn install
+          # working_directory: ./client
+
+      - run:
+          command: yarn eslint
+          # working_directory: ./client
+
+      - run:
+          command: yarn build
+          # working_directory: ./client
