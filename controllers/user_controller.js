@@ -108,6 +108,6 @@ const updateUser = (req, res) => {
 
 router.get('/', showUsers);
 router.post('/', createUser);
-router.delete('/:id', removeUser)
-router.put('/:id', updateUser)
+router.delete('/:id', removeUser);
+router.put('/:id', updateUser);
 module.exports = router;
