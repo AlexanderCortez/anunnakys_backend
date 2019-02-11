@@ -18,5 +18,5 @@ jobs:
           # working_directory: ./client
 
       - run:
-          command: yarn eslint
+          command: yarn eslint .
           # working_directory: ./client
