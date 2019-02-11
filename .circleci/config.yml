@@ -20,7 +20,3 @@ jobs:
       - run:
           command: yarn eslint
           # working_directory: ./client
-
-      - run:
-          command: yarn build
-          # working_directory: ./client
